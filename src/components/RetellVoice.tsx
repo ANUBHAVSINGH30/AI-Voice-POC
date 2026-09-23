@@ -18,6 +18,10 @@ export default function RetellVoice() {
       setError(null);
     };
 
+    const handleCallReady = () => {
+      console.log("🔊 Retell call ready - agent audio connected");
+    };
+
     const handleCallEnded = () => {
       console.log("❌ Retell call ended");
       setIsCalling(false);
@@ -25,18 +29,20 @@ export default function RetellVoice() {
     };
 
     const handleError = (error: unknown) => {
-      console.error("Retell error:", error);
+      console.error("❌ Retell error:", error);
       setError("Something went wrong with the voice call.");
       setIsCalling(false);
       callStartedRef.current = false;
     };
 
     retellClient.on("call_started", handleCallStarted);
+    retellClient.on("call_ready", handleCallReady);
     retellClient.on("call_ended", handleCallEnded);
     retellClient.on("error", handleError);
 
     return () => {
       retellClient.off("call_started", handleCallStarted);
+      retellClient.off("call_ready", handleCallReady);
       retellClient.off("call_ended", handleCallEnded);
       retellClient.off("error", handleError);
     };
@@ -46,6 +52,8 @@ export default function RetellVoice() {
     if (callStartedRef.current) return;
 
     try {
+      console.log("🚀 Starting Retell call...");
+
       setError(null);
       callStartedRef.current = true;
 
@@ -56,14 +64,20 @@ export default function RetellVoice() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to create Retell call");
+        throw new Error(
+          data.error || "Failed to create Retell call"
+        );
       }
+
+      console.log("🚀 Calling Retell startCall...");
 
       await retellClient.startCall({
         accessToken: data.accessToken,
       });
+
+      console.log("🏁 Retell startCall resolved");
     } catch (error) {
-      console.error("Failed to start Retell call:", error);
+      console.error("❌ Failed to start Retell call:", error);
 
       setError("Failed to start voice call.");
       setIsCalling(false);

@@ -9,11 +9,9 @@ datasource db {
 }
 
 model Call {
-  id           String   @id @default(uuid())
+  id           String    @id @default(uuid())
   name         String
   purpose      String
-  calledAt     DateTime @default(now())
-  callbackTime DateTime
-  phoneNumber  String?
-  createdAt    DateTime @default(now())
+  callbackTime DateTime?
+  createdAt    DateTime  @default(now())
 }
