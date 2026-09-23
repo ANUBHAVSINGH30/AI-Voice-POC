@@ -2,11 +2,9 @@
 
 import dynamic from "next/dynamic";
 
-const RealtimeVoice = dynamic(
-  () => import("@/components/RealtimeVoice"),
-  {
-    ssr: false,
-  }
+const RetellVoice = dynamic(
+  () => import("@/components/RetellVoice"),
+  { ssr: false }
 );
 
 export default function Home() {
@@ -16,11 +14,10 @@ export default function Home() {
         <h1>AI Voice Assistant</h1>
 
         <p>
-          Test the AI receptionist using OpenAI
-          Realtime.
+          Test the AI receptionist by starting a voice conversation.
         </p>
 
-        <RealtimeVoice />
+        <RetellVoice />
       </div>
     </main>
   );
